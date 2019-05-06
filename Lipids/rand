@@ -1,0 +1,8 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
+dis = np.random.normal(1, 0.5, 1000)
+
+fig, ax = plt.subplots()
+ax.boxplot(dis)
+plt.show()

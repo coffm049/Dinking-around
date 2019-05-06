@@ -1,0 +1,38 @@
+# Data
+#Sample, Phosphate, Phos_err, Scatter, Scat_err
+#POPS1,   1.05,      0.04,    1.0,     0.2
+#POPS2,   0.83,      0.03,    1.0,     0.2
+#POPS3,   1.4,       0.1,     0.9,     0.08
+#POPC1,   1.18,      0.09,    1.02,    0.07
+#POPC2,   1.87,      0.05,    Na,      Na
+#POPC3,   1.1,       0.1,     0.97,    0.06
+#Mixed1,  1.01,      0.08,    1.0,     0.1
+#Mixed2,  0.93,      0.01,    1.0,     0.1
+#Mixed3,  0.93,      0.03,    0.97,    0.09
+
+# Data reorganized
+# Sample    = ["POPS1", "POPS2", "POPS3", "POPC1", "POPC2", "POPC3", "Mixed1", "Mixed2", "Mixed3"]
+# Phosphate = [1.05,    0.83,    1.4,     1.18,    1.87,    1.1,     1.01,     0.93,     0.93]
+# Phos_err  = [0.04,    0.03,    0.1,     0.09,    0.05,    0.1,     0.08,     0.01,     0.03]
+# Scatter   = [1.0,     1.0,     0.9,     1.02,    0,       0.97,    1.0,      1.0,      0.97]
+# Scat_err  = [0.2,     0.2,     0.08,    0.07,    0,       0.06,    0.1,      0.1,      0.09]
+
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
+from ggplot import *
+
+# Make normal distributions to approximate the measurements with boxplots
+POPS1_phos = np.random.normal(1.05, 0.04, 1000)
+POPS2_phos = np.random.normal(0.83, 0.03, 1000)
+POPS3_phos = np.random.normal(1.4, 0.1, 1000)
+
+POPS1_scat = np.random.normal(1.05, 0.04, 1000)
+POPS2_scat = np.random.normal(0.83, 0.03, 1000)
+POPS3_scat = np.random.normal(1.4, 0.1, 1000)
+
+POPS = pd.DataFrame({"Sample" : ["POPS"] * 6000, "Measure" : ["Phosphate"] * 3000 + ["Scatter"] * 3000 , "Replicate" : ["1"]*1000 + ["2"]*1000 + ["3"]*1000 + ["1"]*1000 + ["2"]* 1000 + ["3"]*1000, "Conc (mM)": list(POPS1_phos) + list(POPS2_phos) + list(POPS3_phos) + list(POPS1_scat) + list(POPS2_scat) + list(POPS3_scat)})
+#samp_ord = ["POPS1", "POPS2", "POPS3"]
+
+g= ggplot(POPS, aes(x= 'Replicate', y = 'Conc (mM)', fill = 'Measure')) + geom_boxplot()
+g.show()
