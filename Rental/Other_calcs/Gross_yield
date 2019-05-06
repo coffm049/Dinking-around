@@ -1,0 +1,9 @@
+Rent = 750
+Rent_an = Rent * 12
+Purch_price = 93000
+Rehab = 7000
+
+Tot_price = Purch_price + Rehab
+
+Gross_yield = (Rent_an / Tot_price) * 100
+print(Gross_yield)

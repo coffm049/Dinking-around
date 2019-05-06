@@ -1,0 +1,5 @@
+AVR = 100000
+Rehab = 7000
+Offer= 0.7 * AVR - Rehab
+
+print(Offer)

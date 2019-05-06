@@ -1,1 +1,7 @@
+Rent = 1000
+Rehab = 7000
+Purch_price= 68000
+Tot_price = Rehab+Purch_price
 
+Rent_cost = (Rent / Tot_price) * 100
+print(Rent_cost)
