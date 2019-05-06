@@ -1,0 +1,48 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
+# system of coefficients
+#A = np.array([[1,1,1],
+#	     [1,2,5],
+#	     [2,5,-1]])
+# basis vector
+#V= np.array(['x',
+#	     'y',
+#             'z'])
+
+#B = np.array([6,
+#              -4,
+#              27])
+
+# Equation is  AV=B. Solving becomes V = A^-1 * B
+
+# Inverse of A
+#Ainv = np.linalg.inv(A)
+# answer is then
+#Vans= Ainv.dot(B)
+
+#print(Vans)
+
+
+A1 = np.array([[1,1],
+              [2,4]])
+V = np.array(['x','y'])
+
+B1 = np.array([4, 8])
+
+# Equation c1A + c2B = c3
+# Solved V = A1^-1 ** B1
+
+A1inv = np.linalg.inv(A1)
+V1ans = A1inv.dot(B1)
+print(V1ans)
+
+x = np.arange(-10,10,1)
+y1= 4-x
+y2= (8-(2*x))/4
+
+plt.subplot(1,1,1)
+plt.plot(x,y1,'r-')
+plt.plot(x,y2,'b--')
+plt.show()
+

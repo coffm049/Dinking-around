@@ -1,0 +1,26 @@
+from scipy.integrate import odeint
+import matplotlib.pyplot as plt
+import numpy as np
+
+
+def model(z,t):
+    x = z[0]
+    y = z[1]
+    dxdt = 60
+    dydt = -9.81 * t
+    return([dxdt, dydt])
+
+# initial conditions
+z0 = [100,60]
+
+t = np.linspace(0,200)
+
+z = odeint(model, z0, t)
+
+x= z[:,0]
+y= z[:,1]
+
+plt.scatter(x,y)
+plt.xlabel('Distance')
+plt.ylabel('Height')
+plt.show()
