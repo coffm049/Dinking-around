@@ -1,0 +1,52 @@
+import matplotlib.pyplot as plt
+from scipy.integrate import odeint
+import numpy as np
+import matplotlib.animation as animation
+
+def update_line(num, data, line):
+    line.set_data(data[..., :num])
+    return line,
+
+fig1 = plt.figure()
+
+
+# theta''(t) + b*theta'(t) + c*sin(theta(t)) = 0
+# theta'(t) = omega(t)
+# omega'(t) = -b*omega(t) - c*sin(theta(t))
+def pend(y, t, b, c):
+     theta, omega = y
+     dydt = [omega, -b*omega - c*np.sin(theta)]
+     return dydt
+b = 0.25
+c = 5.0
+
+y0 = [np.pi- 1.7, 0.0]
+t = np.linspace(0,10,101)
+
+sol = odeint(pend, y0, t, args = (b,c))
+
+theta = sol[:,0]
+omega = sol[:,1]
+
+x = c * np.sin(theta)
+y = -c * np.cos(theta)
+
+data = np.array([x, y])
+
+#plt.plot(t, theta, 'b', label ='theta(t)')
+#plt.plot(t, omega, 'g', label='omega(t)')
+#plt.legend(loc='best')
+#plt.plot(x, y)
+l, = plt.plot([], [], 'b-', alpha = 0.2, marker = 'o')
+plt.xlim(-5,5)
+plt.ylim(-5,5)
+plt.yticks([])
+plt.xticks([])
+line_ani = animation.FuncAnimation(fig1, update_line, len(t), fargs=(data, l),
+                                   interval=75, blit=True)
+
+plt.show()
+
+#Writer = animation.writers('ffmpeg')
+#writer = Writer(fps = 15, metadata= dict(artist = 'Christian'), bitrate = 1800)
+line_ani.save('pendulum.mpeg', writer = 'ffmpeg')

@@ -1,0 +1,37 @@
+from scipy.integrate import odeint
+import matplotlib.pyplot as plt
+import numpy as np
+import matplotlib.animation as animation
+
+def update_line(num, data, line):
+    line.set_data(data[..., :num])
+    return line,
+
+fig1 = plt.figure()
+
+
+def model(z,t):
+    r = z[0]
+    theta = z[1]
+    drdt = 0
+    dthetadt = 4.6 * t
+    return([drdt, dthetadt])
+
+# initial conditions
+z0 = [1,0]
+
+t = np.linspace(0,1.6, 30)
+
+z = odeint(model, z0, t)
+
+r= z[:,0]
+theta= z[:,1]
+data = np.array([theta, r])
+plt.subplot(111, projection = 'polar')
+l, =plt.plot([], [], 'r-')
+line_ani = animation.FuncAnimation(fig1, update_line, len(t), fargs=(data, l),
+                                   interval=50, blit=True)
+
+
+plt.show()
+print(len(t))
