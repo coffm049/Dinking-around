@@ -1,0 +1,47 @@
+from tkinter import *
+from matplotlib.backends.backend_tkagg import (
+    FigureCanvasTkAgg, NavigationToolbar2Tk)
+# Implement the default Matplotlib key bindings.
+from matplotlib.backend_bases import key_press_handler
+from matplotlib.figure import Figure
+import matplotlib.pyplot as plt
+import numpy as np
+
+
+
+window = Tk()
+
+Label(window, text= "Vacancy rate (%)").pack(side = TOP)
+slopey = Scale(window, from_=0, to=10, orient = HORIZONTAL)
+slopey.pack(side = TOP)
+
+def _draw():
+    slope = float(slopey.get())
+    fig, ax = plt.subplots()
+    fig.set_size_inches(3,3)
+    t = np.arange(0, 3, .01)
+    ax.plot(t, slope * t)
+
+    canvas = FigureCanvasTkAgg(fig, master=window)  # A tk.DrawingArea.
+    canvas.draw()
+    canvas.get_tk_widget().pack(side=TOP, fill=BOTH, expand=1)
+
+    toolbar = NavigationToolbar2Tk(canvas, window)
+    toolbar.update()
+    canvas.get_tk_widget().pack(side=TOP, fill=BOTH, expand=1)
+
+drw_but = Button(master = window, text = "Draw", command= _draw).pack(side = TOP)
+
+
+def _quit():
+    window.quit()     # stops mainloop
+    window.destroy()  # this is necessary on Windows to prevent
+                    # Fatal Python Error: PyEval_RestoreThread: NULL tstate
+
+
+button = Button(master=window, text="Quit", command=_quit)
+button.pack(side=BOTTOM)
+
+
+window.mainloop()
+

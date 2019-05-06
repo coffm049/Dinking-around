@@ -1,0 +1,46 @@
+from scipy.integrate import odeint
+import matplotlib.pyplot as plt
+import numpy as np
+
+# define the model where the change in the principle is compounded monthly by r/12 and the monthly mortgage paid is m
+# dp/dt = (r/12) * p - m
+# these values are updated monthly
+
+# initial amount borrowed
+val = 100000
+down = 0.2
+p0 = val - (down * val)
+
+years= 30
+monthes = years * 12
+
+def amort(p,t,r):
+    rate = r/1200
+    m = p0 * (rate * (1+rate) ** monthes)/((1+rate) ** monthes -1)
+    dpdt = (rate) * p - m
+    return(dpdt)
+
+
+t = np.linspace(0,monthes)
+r = 3
+p = odeint(amort, p0, t, args= (r,))
+p = np.reshape(p, t.shape)
+#percent equity
+p_eq = down + ((1-down) * (1- (p/p0)))
+# yearly appreciation is usually between 3-5%
+app_yearly=0.03
+app_monthly=app_yearly/12
+
+# percent growht from interest
+p_growth = (1+ app_monthly) ** t
+# equity
+eq = (p_eq * val)
+eq_w_app = eq * p_growth
+fig,ax = plt.subplots(1,1)
+ax.plot(t/12,p, label = "Principal")
+ax.set_xlabel('time (years)')
+ax.set_ylabel('Principal ($)')
+ax2= plt.twinx()
+ax2.plot(t/12,eq_w_app,label="Equity")
+ax2.set_ylabel('Equity ($)')
+plt.show()

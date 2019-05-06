@@ -1,0 +1,66 @@
+from scipy.integrate import odeint
+import matplotlib.pyplot as plt
+import numpy as np
+
+#####################################
+# MORTGAGE DIFFERENTIAL MODEL #######
+#####################################
+
+# define the model where the change in the principle is compounded monthly by r/12 and the monthly mortgage paid is m
+# dp/dt = (r/12) * p - m
+# these values are updated monthly
+
+# initial amount borrowed
+val = 100000
+down = 0.2
+p0 = val - (down * val)
+
+years= 30
+monthes = years * 12
+
+# Function for Differential Model ##
+def amort(p,t,r):
+    rate = r/1200
+    m = p0 * (rate * (1+rate) ** monthes)/((1+rate) ** monthes -1)
+    dpdt = (rate) * p - m
+    return(dpdt)
+
+t = np.linspace(0,monthes)
+r = 3
+p = odeint(amort, p0, t, args= (r,))
+p = np.reshape(p, t.shape)
+
+#####################################
+# End Differential Mortgage model ###
+#####################################
+
+# Convert the percent equity to a equity dollar amount. This way I can account for appreciation of property value.
+#percent equity
+p_eq = down + ((1-down) * (1- (p/p0)))
+# yearly appreciation is usually between 3-5%
+app_yearly=0.03
+app_monthly=app_yearly/12
+
+
+# Create a cash flow component.
+CoC_ROI = 0.2 
+Tot_cash = t * (CoC_ROI/ 12) * val * down
+
+# Figure out the period it takes to be able to put up another 20% loan from the cash flow
+buy_period_ind  = np.where(Tot_cash > 20000)[0][0]
+buy_period = t[buy_period_ind]
+
+# percent growth from interest
+p_growth = (1+ app_monthly) ** t
+# equity
+eq = (p_eq * val)
+eq_w_app = eq * p_growth
+fig,ax = plt.subplots(1,1)
+ax.bar(t/12, eq_w_app, label = "Equity", color = 'blue')
+ax.bar(t/12,p, label = "Principal", bottom=eq_w_app, color= 'red')
+ax.bar(t/12,Tot_cash, label = "Cash Flowed", bottom=eq_w_app + p, color = 'g')
+ax.axvline(x=buy_period/12, color = 'r', linestyle = '--')
+ax.set_xlabel('time (years)')
+ax.set_ylabel('Principal ($)')
+plt.legend()
+plt.show()
