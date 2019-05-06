@@ -1,0 +1,11 @@
+import requests
+from bs4 import BeautifulSoup
+
+url = 'https://www.realtor.com/realestateandhomes-search/55808+beds-3/type-multi-family-home/price-na-150000/pnd-hide'
+r =  requests.get(url)
+
+html_doc = r.text
+soup = BeautifulSoup(html_doc)
+
+print(soup.title)
+print(soup.text)
