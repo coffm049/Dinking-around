@@ -1,0 +1,36 @@
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
+
+# Set useful greek letters for common symbols we need in axes labels
+degree_sign = u'\u2103'
+theta_sign = u'\u03B8'
+
+
+x = np.arange(20,70, 0.1)
+y = np.exp((x-45)/4) / (1+ np.exp((x-45)/4))
+
+# plt.style.use('ggplot')
+fig, ax = plt.subplots(1,1)
+ln1 = ax.plot(x,y, c='k', label = 'Fraction folded (' + theta_sign + ')')
+ax.set_xlabel('Temp ( ' + degree_sign + ')')
+ax.set_ylabel('Fraction unfolded (' + theta_sign + ')')
+
+dx = x[1]-x[0]
+dydx = np.gradient(y, dx)
+
+data= pd.DataFrame({'H' : y, 'Cp' : dydx}, index = x)
+ln1= data['H'].plot(kind = 'line', label = 'Fraction folded (' + theta_sign + ')', c = 'k', ax = ax)
+ax2 = plt.twinx()
+ln2= data['Cp'].plot(kind= 'line', label = 'Chage in folded fraction (d' + theta_sign + '/dT)', c = 'r', ax = ax2)
+ln2 = ax2.plot(x, dydx, 'r--', label = 'Change in folded fraction (d' + theta_sign + '/dT)')
+ax2.set_ylim([-0.01,0.25])
+ax2.yaxis.label.set_color('r')
+ax2.tick_params(axis= 'y',colors ='red')
+ax2.set_ylabel('Change in fraction unfolded (d' + theta_sign + '/dT)')
+
+lns = ln1 + ln2
+labs = [l.get_label() for l in lns]
+plt.legend(lns, labs, loc = 2)
+plt.show()
+

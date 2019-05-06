@@ -1,0 +1,15 @@
+import numpy as np
+import matplotlib.pyplot as plt
+import pandas as pd
+
+levels = [0,1,1,0,0]
+theta = np.linspace(0, 2 * np.pi, len(levels))
+Basis = pd.DataFrame({'Level' : levels, 'Angle' : theta}, index = ['Creative', 'Music', 'People', 'Math',''])
+
+
+ax = plt.subplot(111, projection='polar')
+ax.fill(Basis['Angle'], Basis['Level'])
+#ax.grid(True)
+#ax.set_xticklabels(['Hi', 'hi', 'HI', 'hI', 'IH', 'iH', 'ih', 'Ih'])
+#ax.set_title("Pokemon style attribute plot", va='bottom')
+plt.show()

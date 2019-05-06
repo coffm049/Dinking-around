@@ -1,0 +1,27 @@
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
+
+Temp = np.arange(20, 80, 1)
+Tm = 55
+A =5
+w =5 
+# Generate curve using Hubbert because it's way easier
+Cp = np.array(((4 * A) * np.exp((Temp-Tm)/w)) / (1 + np.exp((Temp-Tm)/w))**2)
+
+dx = Temp[1] - Temp[0]
+H = Cp.cumsum() * dx
+
+data = pd.DataFrame({'Cp': Cp, 'H': H}, index = Temp)
+
+fig0, ax0 = plt.subplots(1,1)
+ax0.set_ylabel('Cp (heat capacity)')
+ax0.yaxis.label.set_color('r')
+data['Cp'].plot(kind = 'line', ax= ax0, c = 'r')
+ax1= plt.twinx()
+ax1.set_ylabel('Percent (%)')
+ax1.yaxis.label.set_color('blue')
+data['H'].plot(kind='area', ax=ax1, alpha = 0.5)
+plt.xlabel('Temp (C)')
+plt.show()
+
